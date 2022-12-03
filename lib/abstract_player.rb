@@ -16,7 +16,7 @@ class Abstract_Player
         move
     end
 
-    def fetch_squares(board, piece_id, origin, color)
+    def fetch_squares(piece_id, origin, color)
         #initializing origin to '' if nil, which is guaranteed to be true
         origin = origin || ''
         pieces = board.grid.\
@@ -26,7 +26,7 @@ class Abstract_Player
         nil
     end
 
-    def valid_destination(board, squares, destination)
+    def valid_destination(squares, destination)
         squares = squares.filter do |current_coordinate, square_data|
             square_data[:piece_object].movement_possible?(current_coordinate, destination)
         end
@@ -35,11 +35,11 @@ class Abstract_Player
 
 #ordering below
 
-    def register_move(board, length, destination, squares)
+    def register_move(length, destination, squares)
         case length
         when 1 
-            move_piece(board,squares.keys[0], destination)
-            delete_piece(board,squares.keys[0])
+            move_piece(squares.keys[0], destination)
+            delete_piece(squares.keys[0])
         when 0 
             print invalid_message('invalid')
         else
@@ -47,14 +47,14 @@ class Abstract_Player
         end
     end
 
-    def delete_piece(board,current_coordinate)
+    def delete_piece(current_coordinate)
         board.grid[current_coordinate][:square][11] = ' '
         board.grid[current_coordinate][:piece_object] = nil
         board.grid[current_coordinate][:piece_color] = nil
         board.grid[current_coordinate][:piece_id] = nil
     end
 
-    def move_piece(board, current_coordinate,destination)
+    def move_piece(current_coordinate,destination)
         board.grid[destination][:square][11] = board.grid[current_coordinate][:square][11]
         board.grid[destination][:piece_object] = board.grid[current_coordinate][:piece_object]
         board.grid[destination][:piece_color] = board.grid[current_coordinate][:piece_color]

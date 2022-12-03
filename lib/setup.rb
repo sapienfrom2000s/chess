@@ -3,7 +3,13 @@ require_relative 'board.rb'
 
 class Setup
 
-    def init_knights(board)
+    attr_reader :board
+
+    def initialize(board)
+        @board = board
+    end
+
+    def init_knights
         knights = []
         {'b1'=>:white,'g1'=>:white,'g8'=>:black,'b8'=>:black}.each_with_index do |(coordinate, color), index|
             knights << Knight.new

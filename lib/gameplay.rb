@@ -9,18 +9,18 @@ class Gameplay
     def initialize
         @board = Board.new
         print @board.display
-        setup = Setup.new
-        setup.init_knights(@board)
+        setup = Setup.new(@board)
+        setup.init_knights
         print @board.display
-        @player_white = Player_White.new
+        @player_white = Player_White.new(@board)
     end
 
     def play
         loop do
-            @player_white.move(@board)
+            @player_white.move
             print @board.display
-            # binding.pry
-            @player_white.move(@board)
+            binding.pry
+            @player_white.move
             print @board.display
         end
     end
