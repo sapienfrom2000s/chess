@@ -19,7 +19,6 @@ class Gameplay
         loop do
             @player_white.move
             print @board.display
-            binding.pry
             @player_white.move
             print @board.display
         end

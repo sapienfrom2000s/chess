@@ -3,7 +3,15 @@ require 'pry-byebug'
 
 class Knight
 
-    def self.piece(color)
+    attr_reader :color, :piece_id, :rendered
+
+    def initialize(color, piece_id)
+        @color = color
+        @piece_id = piece_id
+        @rendered = piece(color)
+    end
+
+    def piece(color)
         {white: '♘', black: '♞'}[color]
     end
 

@@ -7,7 +7,7 @@ module Messages
                         "to select with more clarity \n",
             'invalid'=>"The move you made is invalid \n",
             'ambigous'=>"The move you made is ambigous, more than one intended piece can"\
-                        "can land there \n"
+                        " land there \n"
                     
         }[error]
     end

@@ -29,9 +29,7 @@ class Board
         coordinate = file.concat(rank.to_s)
         @grid[coordinate] = {}
         @grid[coordinate][:position] = 8 * (rank - 1) + (file.ord - 96)
-        @grid[coordinate][:piece_object] = nil
-        @grid[coordinate][:piece_id] = nil
-        @grid[coordinate][:piece_color] = nil
+        @grid[coordinate][:piece] = nil
         if (@grid[coordinate][:position] + rank).even? 
           @grid[coordinate][:square] = dark_square
         else

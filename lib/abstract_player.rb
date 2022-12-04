@@ -16,11 +16,11 @@ class Abstract_Player
         move
     end
 
-    def fetch_squares(piece_id, origin, color)
+    def fetch_squares(piece_id, origin_info, color)
         #initializing origin to '' if nil, which is guaranteed to be true
-        origin = origin || ''
+        origin_info = origin_info || ''
         pieces = board.grid.\
-        filter{|coordinate, data| data[:piece_id] == piece_id && data[:piece_color] == color && coordinate.to_s.match?(origin) }
+        filter{|coordinate, data| data[:piece] != nil && data[:piece].piece_id == piece_id && data[:piece].color == color && coordinate.to_s.match?(origin_info) }
         return pieces unless pieces.length == 0
         print invalid_message('selection')
         nil
@@ -28,12 +28,10 @@ class Abstract_Player
 
     def valid_destination(squares, destination)
         squares = squares.filter do |current_coordinate, square_data|
-            square_data[:piece_object].movement_possible?(current_coordinate, destination)
+            square_data[:piece].movement_possible?(current_coordinate, destination)
         end
         squares
     end
-
-#ordering below
 
     def register_move(length, destination, squares)
         case length
@@ -49,16 +47,12 @@ class Abstract_Player
 
     def delete_piece(current_coordinate)
         board.grid[current_coordinate][:square][11] = ' '
-        board.grid[current_coordinate][:piece_object] = nil
-        board.grid[current_coordinate][:piece_color] = nil
-        board.grid[current_coordinate][:piece_id] = nil
+        board.grid[current_coordinate][:piece] = nil
     end
 
     def move_piece(current_coordinate,destination)
-        board.grid[destination][:square][11] = board.grid[current_coordinate][:square][11]
-        board.grid[destination][:piece_object] = board.grid[current_coordinate][:piece_object]
-        board.grid[destination][:piece_color] = board.grid[current_coordinate][:piece_color]
-        board.grid[destination][:piece_id] = board.grid[current_coordinate][:piece_id]
+        board.grid[destination][:square][11] = board.grid[current_coordinate][:piece].rendered
+        board.grid[destination][:piece] = board.grid[current_coordinate][:piece]
     end
 
 end
