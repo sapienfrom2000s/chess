@@ -22,8 +22,8 @@ class Knight < Abstract_Piece
     def potential_squares(slashed_coordinate)
         current_file = slashed_coordinate[0]
         current_rank = slashed_coordinate[1].to_i
-        relative_moves.map do |relative_move|
-            [(relative_move[0]+current_file.ord).chr,relative_move[1]+current_rank].join
-        end
+        relative_moves.filter do |relative_move|
+            (relative_move[0]+current_file.ord).chr.between?('a','h') && (relative_move[1]+current_rank).between?(1,8)
+        end.map { |relative_move| [(relative_move[0]+current_file.ord).chr, (relative_move[1]+current_rank)].join }
     end
 end

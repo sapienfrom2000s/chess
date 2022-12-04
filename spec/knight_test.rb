@@ -1,27 +1,37 @@
-require_relative '../lib/setup.rb'
+require_relative '../lib/knight.rb'
 
-describe Setup do
+describe Knight do
     
     context 'when knights are initialized' do
 
-    it 'modifies board at b1' do
-        board = Board.new
-        setup = Setup.new
-        setup.init_knights(board)
-        expect(board.grid['b1'][:piece_id]).to eq(:N)
-        expect(board.grid['b1'][:piece_color]).to eq(:white)
-        expect(board.grid['b1'][:square][11]).to eq('♘')
-        expect(board.grid['b1'][:square][11]).to_not be nil
+    xit 'returns true if knight can move from f1 to d2' do
+        knight = Knight.new('bla','bla')
+        expect(knight.movement_possible?('f1','d2')).to be true
     end
 
-    it 'modifies board at b1' do
-        board = Board.new
-        setup = Setup.new
-        setup.init_knights(board)
-        expect(board.grid['b8'][:piece_id]).to eq(:N)
-        expect(board.grid['b8'][:piece_color]).to eq(:black)
-        expect(board.grid['b8'][:square][11]).to eq('♞')
-        expect(board.grid['b8'][:square][11]).to_not be nil
+    xit 'returns true if knight can move from h1 to h7' do
+        knight = Knight.new('bla','bla')
+        expect(knight.movement_possible?('h1','h7')).to be false
+    end
+
+    xit 'returns true if knight can move from h7 to h8' do
+        knight = Knight.new('bla','bla')
+        expect(knight.movement_possible?('h7','h8')).to be false
+    end
+
+    xit 'returns true if knight can move from e4 to f6' do
+        knight = Knight.new('bla','bla')
+        expect(knight.movement_possible?('e4','f6')).to be  true
+    end
+
+    xit 'returns true if knight can move from d8 to f7' do
+        knight = Knight.new('bla','bla')
+        expect(knight.movement_possible?('d8','f7')).to be true
+    end
+
+    it 'returns true if knight can move from a8 to h7' do
+        knight = Knight.new('bla','bla')
+        expect(knight.movement_possible?('a8','h7')).to be false
     end
 
   end
