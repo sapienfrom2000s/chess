@@ -1,6 +1,6 @@
-require 'pry-byebug'
+require_relative 'abstract_piece.rb'
 
-class Rook
+class Rook < Abstract_Piece
 
     UNIT_LENGTH = 1
 
@@ -40,10 +40,4 @@ class Rook
             [(relative_move[0]+current_file.ord).chr,relative_move[1]+current_rank].join
         end
     end
-
-    def movement_possible?(current_coordinate, destination)
-        a = potential_squares(current_coordinate.split(''))
-        a.any?{|potential_square|  potential_square == destination }
-    end
-
 end

@@ -1,35 +1,29 @@
-require 'colorize'
-require 'pry-byebug'
+require_relative 'abstract_piece.rb'
 
-class Knight
+class Knight < Abstract_Piece
 
-    attr_reader :color, :piece_id, :rendered
+    attr_reader :color, :piece_id, :rendered, :relative_moves
 
     def initialize(color, piece_id)
         @color = color
         @piece_id = piece_id
         @rendered = piece(color)
+        init_relative_movement
     end
 
     def piece(color)
         {white: '♘', black: '♞'}[color]
     end
 
-    def self.relative_movement
-        [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]]
+    def init_relative_movement
+        @relative_moves = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]]
     end
 
-    def potential_squares(adder)
-        file_adder = adder[0].ord
-        rank_adder = adder[1].to_i
-        self.class.relative_movement.map do |relative_move|
-            [(relative_move[0]+file_adder).chr,relative_move[1]+rank_adder].join
+    def potential_squares(slashed_coordinate)
+        current_file = slashed_coordinate[0]
+        current_rank = slashed_coordinate[1].to_i
+        relative_moves.map do |relative_move|
+            [(relative_move[0]+current_file.ord).chr,relative_move[1]+current_rank].join
         end
     end
-
-    def movement_possible?(current_coordinate, destination)
-        a = potential_squares(current_coordinate.split(''))
-        a.any?{|potential_square|  potential_square == destination }
-    end
-    
 end

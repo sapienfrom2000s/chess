@@ -1,6 +1,7 @@
 require 'pry-byebug'
+require_relative 'abstract_piece.rb'
 
-class Bishop
+class Bishop < Abstract_Piece
 
     UNIT_LENGTH = 1
 
@@ -15,10 +16,6 @@ class Bishop
 
     def piece(color)
         {white: '♗', black: '♝'}[color]
-    end
-
-    def dyanamic_relative_movement
-
     end
 
     def unit_relative_movement
@@ -42,10 +39,4 @@ class Bishop
             [(relative_move[0]+current_file.ord).chr,relative_move[1]+current_rank].join
         end
     end
-
-    def movement_possible?(current_coordinate, destination)
-        a = potential_squares(current_coordinate.split(''))
-        a.any?{|potential_square|  potential_square == destination }
-    end
-
 end
