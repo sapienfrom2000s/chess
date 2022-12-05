@@ -4,6 +4,7 @@ require_relative 'rook'
 require_relative 'board'
 require_relative 'queen'
 require_relative 'pawn'
+require_relative 'king'
 require 'pry-byebug'
 
 class Setup
@@ -56,6 +57,15 @@ class Setup
             pawns << Pawn.new(color, :P, board)
             board.grid[coordinate][:piece] = pawns[index]
             board.grid[coordinate][:square][11] = pawns[index].rendered
+        end
+    end
+
+    def init_kings
+        kings = []
+        {'e1'=>:white,'e8'=>:black}.each_with_index do |(coordinate, color), index|
+            kings << King.new(color, :K, board)
+            board.grid[coordinate][:piece] = kings[index]
+            board.grid[coordinate][:square][11] = kings[index].rendered
         end
     end
 
