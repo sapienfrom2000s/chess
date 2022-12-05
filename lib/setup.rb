@@ -3,6 +3,8 @@ require_relative 'bishop'
 require_relative 'rook'
 require_relative 'board'
 require_relative 'queen'
+require_relative 'pawn'
+require 'pry-byebug'
 
 class Setup
 
@@ -18,7 +20,6 @@ class Setup
             knights << Knight.new(color,:N, board)
             board.grid[coordinate][:piece] = knights[index]
             board.grid[coordinate][:square][11] = knights[index].rendered
-            #the property of pieces should not be the property of grid but of piece itself 
         end
     end
 
@@ -48,4 +49,23 @@ class Setup
             board.grid[coordinate][:square][11] = queens[index].rendered
         end
     end
+
+    def init_pawns
+        pawns = []
+        pawns_hash.each_with_index do |(coordinate, color), index|
+            pawns << Pawn.new(color, :P, board)
+            board.grid[coordinate][:piece] = pawns[index]
+            board.grid[coordinate][:square][11] = pawns[index].rendered
+        end
+    end
+
+    def pawns_hash
+        pawn_data = {} 
+        'a'.upto('h') do |file|
+          pawn_data[[file,2].join] = :white  
+          pawn_data[[file,7].join] = :black
+        end
+        pawn_data
+    end
+
 end 
