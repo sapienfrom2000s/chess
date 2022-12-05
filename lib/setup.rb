@@ -1,7 +1,8 @@
-require_relative 'knight.rb'
-require_relative 'bishop.rb'
-require_relative 'rook.rb'
-require_relative 'board.rb'
+require_relative 'knight'
+require_relative 'bishop'
+require_relative 'rook'
+require_relative 'board'
+require_relative 'queen'
 
 class Setup
 
@@ -36,6 +37,15 @@ class Setup
             rooks << Rook.new(color, :R, board)
             board.grid[coordinate][:piece] = rooks[index]
             board.grid[coordinate][:square][11] = rooks[index].rendered
+        end
+    end
+
+    def init_queens
+        queens = []
+        {'d1'=>:white,'d8'=>:black}.each_with_index do |(coordinate, color), index|
+            queens << Queen.new(color, :Q, board)
+            board.grid[coordinate][:piece] = queens[index]
+            board.grid[coordinate][:square][11] = queens[index].rendered
         end
     end
 end 
