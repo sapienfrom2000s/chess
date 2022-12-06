@@ -39,6 +39,10 @@ class Board
     end
   end
 
+  def square_available?(coordinate)
+    grid[coordinate][:piece].nil?
+  end
+
   def display
     board = "\n"
     grid.each_value do |val|

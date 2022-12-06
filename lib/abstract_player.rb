@@ -1,5 +1,6 @@
 require_relative 'messages.rb'
 require_relative 'move_parser.rb'
+require 'pry-byebug'
 
 class Abstract_Player
 
@@ -17,13 +18,25 @@ class Abstract_Player
     end
 
     def fetch_squares(piece_id, origin_info, color)
-        #initializing origin to '' if nil, which is guaranteed to be true
+        #initializing origin to '', if nil, which is guaranteed to be true
         origin_info = origin_info || ''
         pieces = board.grid.\
         filter{|coordinate, data| data[:piece] != nil && data[:piece].piece_id == piece_id && data[:piece].color == color && coordinate.to_s.match?(origin_info) }
         return pieces unless pieces.length == 0
         print invalid_message('selection')
         nil
+    end
+
+    def capture(squares, destination, opposition_color)
+    
+        if board.grid[destination][:piece].color == opposition_color && board.grid[destination][:piece].piece_id != :K 
+            squares = squares.filter do |current_coordinate, square_data|
+                square_data[:piece].capture_possible?(current_coordinate, destination)
+            end
+        else
+            return 0
+        end
+        squares
     end
 
     def valid_destination(squares, destination)
@@ -45,6 +58,16 @@ class Abstract_Player
         end
     end
 
+    def register_capture(potential_captures, destination)
+        case potential_captures.length
+        when 1 
+            move_piece(potential_captures.keys[0], destination)
+            delete_piece(potential_captures.keys[0])
+        else
+            print invalid_message('capture')
+        end
+    end
+
     def delete_piece(current_coordinate)
         board.grid[current_coordinate][:square][11] = ' '
         board.grid[current_coordinate][:piece] = nil
@@ -53,6 +76,24 @@ class Abstract_Player
     def move_piece(current_coordinate,destination)
         board.grid[destination][:square][11] = board.grid[current_coordinate][:piece].rendered
         board.grid[destination][:piece] = board.grid[current_coordinate][:piece]
+    end
+
+    def move(opposition_color)
+        loop do
+            parsed_data = parse(input)
+            piece_id, origin_info,capture_info, destination = parsed_data[0],parsed_data[1],parsed_data[2], parsed_data[3]
+            selected_squares = fetch_squares(piece_id, origin_info, color)
+            next if selected_squares == nil
+            if capture_info
+                binding.pry
+                potential_captures = capture(selected_squares, destination, opposition_color) if capture_info
+                register_capture(potential_captures, destination)
+                potential_captures.length == 1 ? break : next
+            end 
+            potential_destinations = valid_destination(selected_squares,destination)
+            register_move(potential_destinations.length,destination,potential_destinations)
+            break if potential_destinations.length == 1
+        end
     end
 
 end

@@ -1,7 +1,7 @@
 require_relative 'move_parser.rb'
 require_relative 'abstract_player.rb'
 
-class Player_White < Abstract_Player
+class Player_Black < Abstract_Player
 
     include Move_Parser
 
@@ -9,7 +9,7 @@ class Player_White < Abstract_Player
 
     def initialize(board)
         @board = board
-        @color = :white
+        @color = :black
     end
 
 end

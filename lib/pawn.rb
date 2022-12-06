@@ -2,21 +2,20 @@ require_relative 'abstract_piece'
 require 'pry-byebug'
 
 class Pawn < Abstract_Piece
-  attr_reader :color, :piece_id, :rendered, :relative_moves, :board
+  attr_reader :color, :piece_id, :rendered, :board
 
   def initialize(color, piece_id, board)
     @color = color
     @piece_id = piece_id
     @rendered = piece(color)
     @board = board
-    init_relative_movement
   end
 
   def piece(color)
     { white: '♙', black: '♟' }[color]
   end
 
-  def init_relative_movement
+  def relative_moves
     color == :white ? @relative_moves = [[0,1]] : @relative_moves = [[0,-1]] 
   end
 
