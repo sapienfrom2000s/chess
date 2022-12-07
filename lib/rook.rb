@@ -37,6 +37,24 @@ class Rook < Abstract_Piece
     relative_moves
   end
 
+  def capture_possible?(current_coordinate, destination)
+    current_file = current_coordinate[0]
+    current_rank = current_coordinate[1].to_i
+    destination_file = destination[0]
+    destination_rank = destination[1].to_i
+    potential_squares = potential_squares(current_coordinate)
+    b = unit_relative_movement.keys.filter do |relative_move|
+        (((destination_file.ord - current_file.ord)*relative_move[0]).positive? &&\
+        ((destination_rank - current_rank) * relative_move[1]).zero?) ||\
+        (((destination_file.ord - current_file.ord)*relative_move[0]).zero? &&\
+        ((destination_rank - current_rank) * relative_move[1]).positive?)
+    end.map{|relative_move| relative_move.map{|fileorrank| fileorrank * (-1)  } }.map\
+    do |relative_move|
+    forge_coordinate(relative_move, destination_file, destination_rank)
+    end.any?\
+    {|coordinate|  (potential_squares.include?(coordinate) && (board.grid[coordinate][:piece].nil?) || coordinate == current_coordinate)}
+end
+
   def potential_squares(slashed_coordinate)
     current_file = slashed_coordinate[0]
     current_rank = slashed_coordinate[1].to_i
