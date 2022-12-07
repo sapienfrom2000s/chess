@@ -8,7 +8,8 @@ module Messages
             'invalid'=>"The move you made is invalid \n",
             'ambigous'=>"The move you made is ambigous, more than one intended piece can"\
                         " land there \n",
-            'capture' => "You are trying an invalid capture \n"
+            'capture' => "You are trying an invalid capture \n",
+            'ambigous capture' => "More than one piece can make the capture, be more precise\n",
                     
         }[error]
     end

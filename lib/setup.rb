@@ -26,7 +26,7 @@ class Setup
 
     def init_bishops
         bishops = []
-        {'c1'=>:white,'f1'=>:white,'c8'=>:black,'f8'=>:black}.each_with_index do |(coordinate, color), index|
+        {'c1'=>:white,'c4'=>:white,'b5'=>:white,'c8'=>:black,'f8'=>:black}.each_with_index do |(coordinate, color), index|
             bishops << Bishop.new(color, :B, board)
             board.grid[coordinate][:piece] = bishops[index]
             board.grid[coordinate][:square][11] = bishops[index].rendered

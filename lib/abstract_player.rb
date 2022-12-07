@@ -34,7 +34,7 @@ class Abstract_Player
                 square_data[:piece].capture_possible?(current_coordinate, destination)
             end
         else
-            return 0
+            return {}
         end
         squares
     end
@@ -63,8 +63,10 @@ class Abstract_Player
         when 1 
             move_piece(potential_captures.keys[0], destination)
             delete_piece(potential_captures.keys[0])
-        else
+        when 0
             print invalid_message('capture')
+        else
+            print invalid_message('ambigous capture')
         end
     end
 
@@ -85,7 +87,6 @@ class Abstract_Player
             selected_squares = fetch_squares(piece_id, origin_info, color)
             next if selected_squares == nil
             if capture_info
-                binding.pry
                 potential_captures = capture(selected_squares, destination, opposition_color) if capture_info
                 register_capture(potential_captures, destination)
                 potential_captures.length == 1 ? break : next
