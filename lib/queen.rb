@@ -33,4 +33,8 @@ class Queen < Abstract_Piece
             forge_coordinate(relative_move, current_file, current_rank)
         end
     end
+
+    def capture_possible?(current_coordinate, destination)
+        bishop.capture_possible?(current_coordinate, destination) || rook.capture_possible?(current_coordinate, destination) 
+    end
 end
