@@ -19,14 +19,16 @@ class Pawn < Abstract_Piece
     color == :white ? @relative_moves = [[0,1]] : @relative_moves = [[0,-1]] 
   end
 
-  def potential_squares(slashed_coordinate)
-    current_file = slashed_coordinate[0]
-    current_rank = slashed_coordinate[1].to_i
-    relative_moves.reject do |relative_move|
+  def potential_squares(coordinate)
+    current_file = coordinate[0]
+    current_rank = coordinate[1].to_i
+    all_squares = relative_moves.reject do |relative_move|
       current_rank == 8 || current_rank == 1
     end.map do |relative_move|
       forge_coordinate(relative_move, current_file, current_rank)
-    end.filter \
+    end
+    yield(all_squares) if block_given?
+    available_squares = all_squares.filter \
     { |coordinate| board.square_available?(coordinate) }
   end
 
@@ -41,6 +43,14 @@ class Pawn < Abstract_Piece
     end
     a.flatten.any?{|potential_square|  potential_square == destination }    
   end
+
+  def capture_possible?(current_coordinate, destination)
+    #no need to eliminate ` and i file here as it's the last complexity
+    a = potential_squares(current_coordinate) do |forward_coordinate|
+      possible_captures = [[(forward_coordinate[0][0].ord-1).chr,forward_coordinate[0][1]].join, [(forward_coordinate[0][0].ord+1).chr,forward_coordinate[0][1]].join]
+     return possible_captures.include?(destination)
+    end
+   end
 end
 
 
