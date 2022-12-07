@@ -29,7 +29,8 @@ class Abstract_Player
 
     def capture(squares, destination, opposition_color)
     
-        if board.grid[destination][:piece].color == opposition_color && board.grid[destination][:piece].piece_id != :K 
+        if board.grid[destination][:piece] != nil && board.grid[destination][:piece].color == opposition_color &&\
+             board.grid[destination][:piece].piece_id != :K 
             squares = squares.filter do |current_coordinate, square_data|
                 square_data[:piece].capture_possible?(current_coordinate, destination)
             end
