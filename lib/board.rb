@@ -1,7 +1,7 @@
 require 'colorize'
 
 class Board
-  attr_accessor :grid
+  attr_accessor :grid, :moves
 
   START_FILE = 'a'
   END_FILE = 'h'
@@ -10,6 +10,7 @@ class Board
 
   def initialize
     @grid = {}
+    @moves = []
     make_grid
   end
 

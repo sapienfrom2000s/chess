@@ -3,7 +3,7 @@ require 'pry-byebug'
 class Abstract_Piece
     def movement_possible?(current_coordinate, destination)
         potential_squares = potential_squares(current_coordinate)
-        potential_squares.any?{|potential_square|  potential_square == destination }
+        potential_squares.any?{|potential_square|  (potential_square == destination) }
     end
 
     def splitter(coordinate)

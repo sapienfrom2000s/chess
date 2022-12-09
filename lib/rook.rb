@@ -29,12 +29,25 @@ class Rook < Abstract_Piece
       UNIT_LENGTH.upto(linear_length) do |multiplier|
         relative_moves << unit_relative_move.map { |i| i * multiplier }
         unless board.square_available?(forge_coordinate(relative_moves.last, current_file, current_rank)) 
+          yield(relative_moves.last) if block_given?
           relative_moves.pop
           break
         end
       end
     end
     relative_moves
+  end
+
+  def potential_captures(coordinate)
+    current_file = coordinate[0]
+    current_rank = coordinate[1].to_i
+    captures = []
+    available_linear_squares(current_file, current_rank) do |relative_move|
+       occupied_coordinate = forge_coordinate(relative_move, current_file, current_rank)
+       captures << occupied_coordinate if board.grid[occupied_coordinate][:piece].color != color &&\
+        board.grid[occupied_coordinate][:piece].piece_id != :K
+    end
+    captures
   end
 
   def capture_possible?(current_coordinate, destination)
@@ -51,13 +64,14 @@ class Rook < Abstract_Piece
     end.map{|relative_move| relative_move.map{|fileorrank| fileorrank * (-1)  } }.map\
     do |relative_move|
     forge_coordinate(relative_move, destination_file, destination_rank)
-    end.any?\
+    end
+    c = b.any?\
     {|coordinate|  (potential_squares.include?(coordinate) && (board.grid[coordinate][:piece].nil?) || coordinate == current_coordinate)}
 end
 
-  def potential_squares(slashed_coordinate)
-    current_file = slashed_coordinate[0]
-    current_rank = slashed_coordinate[1].to_i
+  def potential_squares(coordinate)
+    current_file = coordinate[0]
+    current_rank = coordinate[1].to_i
     available_linear_squares(current_file, current_rank).map do |relative_move|
       forge_coordinate(relative_move, current_file, current_rank)
     end

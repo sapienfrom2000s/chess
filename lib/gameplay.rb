@@ -25,9 +25,9 @@ class Gameplay
 
     def play
         loop do
-            player_white.move(:black)
+            player_white.move
             print board.display
-            player_black.move(:white)
+            player_black.move
             print board.display
         end
     end

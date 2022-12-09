@@ -9,7 +9,8 @@ class Player_Black < Abstract_Player
 
     def initialize(board)
         @board = board
-        @color = :black
+        @self_color = :black
+        @opposition_color = :white
     end
 
 end

@@ -23,16 +23,25 @@ class Queen < Abstract_Piece
         {white: '♕', black: '♛'}[color]
     end
 
-    def potential_squares(slashed_coordinate)
+    def potential_squares(coordinate)
         relative_moves = []
-        current_file = slashed_coordinate[0]
-        current_rank = slashed_coordinate[1].to_i
+        current_file = coordinate[0]
+        current_rank = coordinate[1].to_i
         relative_moves << bishop.diagonals_available(current_file, current_rank)
         relative_moves << rook.available_linear_squares(current_file, current_rank)
-        relative_moves.flatten(1).map do |relative_move|
+        g = relative_moves.flatten(1).map do |relative_move|
             forge_coordinate(relative_move, current_file, current_rank)
         end
     end
+
+    def potential_captures(coordinate)
+        current_file = coordinate[0]
+        current_rank = coordinate[1].to_i
+        captures = []
+        captures << bishop.potential_captures(coordinate)
+        captures << rook.potential_captures(coordinate)
+        captures
+      end
 
     def capture_possible?(current_coordinate, destination)
         bishop.capture_possible?(current_coordinate, destination) || rook.capture_possible?(current_coordinate, destination) 

@@ -32,6 +32,20 @@ class Pawn < Abstract_Piece
     { |coordinate| board.square_available?(coordinate) }
   end
 
+  def potential_captures(coordinate)
+    current_file = coordinate[0]
+    current_rank = coordinate[1].to_i
+    captures = []
+    pattern = /^[a-h][1-8]$/
+    capture_possible?(coordinate,'h9') do |possible_captures|
+      coords = possible_captures.filter{|coord| coord.match?(pattern)}.each do |coord|  
+      captures << coord if board.grid[coord][:piece] != nil && board.grid[coord][:piece].color != color &&\
+                  board.grid[coord][:piece].piece_id != :K
+      end
+    end
+    captures
+  end
+
   def movement_possible?(current_coordinate, destination)
     a = potential_squares(current_coordinate.split(''))
     if (current_coordinate[1] == '2' && board.grid[current_coordinate][:piece].color == :white)\
@@ -48,6 +62,7 @@ class Pawn < Abstract_Piece
     #no need to eliminate ` and i file here as it's the last complexity
     a = potential_squares(current_coordinate) do |forward_coordinate|
       possible_captures = [[(forward_coordinate[0][0].ord-1).chr,forward_coordinate[0][1]].join, [(forward_coordinate[0][0].ord+1).chr,forward_coordinate[0][1]].join]
+      yield(possible_captures) if block_given?
      return possible_captures.include?(destination)
     end
    end
