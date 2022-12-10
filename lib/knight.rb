@@ -42,7 +42,6 @@ class Knight < Abstract_Piece
   def potential_captures(coordinate)
     captures = []
     potential_squares(coordinate) do |all_coordinates|
-      puts all_coordinates
       all_coordinates.each do |coord|
         captures << coord if board.grid[coord][:piece] != nil && board.grid[coord][:piece].color != color &&\
                   board.grid[coord][:piece].piece_id != :K         

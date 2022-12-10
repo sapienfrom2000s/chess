@@ -7,7 +7,7 @@ class Abstract_Player
     include Messages
     include Move_Parser
 
-    attr_reader :last_moved_piece,  :from1, :rep1, :last_captured_piece, :from2, :rep2
+    attr_reader :move
 
     def input
         move = ''
@@ -16,6 +16,7 @@ class Abstract_Player
             break if is_valid?(move)
             print invalid_message('order') 
         end
+        @move = move
         move
     end
 
@@ -49,18 +50,30 @@ class Abstract_Player
         squares
     end
 
-    def check?(squares,destination)
+    def check_opponent?(squares,destination)
         return squares unless squares.length == 1 
         piece_current = board.grid[squares.keys[0]][:piece]
         piece_destination = board.grid[destination][:piece]  
         board.grid[destination][:piece] = piece_current
         board.grid[squares.keys[0]][:piece] = nil
-        bool1 = board.grid[king_coordinate[1]][:piece].check?(king_coordinate[1])
-        bool2 = board.grid[king_coordinate[0]][:piece].check?(king_coordinate[0])
+        bool = board.grid[king_coordinate[1]][:piece].check?(king_coordinate[1])
         board.grid[destination][:piece] = piece_destination
         board.grid[squares.keys[0]][:piece] = piece_current
-        bool1||bool2
+        bool
     end
+
+    def check_self?(squares, destination)
+        return squares unless squares.length == 1 
+        piece_current = board.grid[squares.keys[0]][:piece]
+        piece_destination = board.grid[destination][:piece]  
+        board.grid[destination][:piece] = piece_current
+        board.grid[squares.keys[0]][:piece] = nil
+        bool = board.grid[king_coordinate[0]][:piece].check?(king_coordinate[0])
+        board.grid[destination][:piece] = piece_destination
+        board.grid[squares.keys[0]][:piece] = piece_current
+        bool
+    end
+
 
     def king_coordinate
         self_king = ''
@@ -74,10 +87,10 @@ class Abstract_Player
         [self_king, opponent_king]
     end
 
-    def register_move(length, destination, squares)
-        case length
+    def register_move(destination, squares)
+        case squares.length
         when 1
-            board.moves << squares.keys[0] 
+            board.moves << @move
             move_piece(squares.keys[0], destination)
             delete_piece(squares.keys[0])
         when 0 
@@ -90,7 +103,7 @@ class Abstract_Player
     def register_capture(selected_squares, destination)
         case selected_squares.length
         when 1 
-            board.moves << selected_squares.keys[0]
+            board.moves << @move
             move_piece(selected_squares.keys[0], destination)
             delete_piece(selected_squares.keys[0])
         when 0
@@ -112,6 +125,13 @@ class Abstract_Player
 
     def move
         loop do
+            if board.moves.empty? == false && board.moves.last.split('').last == '+'
+                if all_valid_moves.empty?
+                    puts "Congrats, #{@opposition_color.to_s.capitalize} Wins! "
+                    exit(0)
+                end
+            end
+
             parsed_data = parse(input)
             piece_id, origin_info,capture_info, destination,check_info = parsed_data[0],parsed_data[1],parsed_data[2], parsed_data[3], parsed_data[4]
             selected_squares = fetch_squares(piece_id, origin_info)
@@ -119,31 +139,53 @@ class Abstract_Player
 
             if capture_info.nil? && check_info.nil?
                 selected_squares = valid_destination(selected_squares,destination)
-                selected_squares = {} if check?(selected_squares, destination)
-                register_move(selected_squares.length,destination,selected_squares)
+                selected_squares = {} if check_opponent?(selected_squares, destination) || check_self?(selected_squares, destination)
+                register_move(destination,selected_squares)
                 selected_squares.length == 1 ? break : next
 
             elsif capture_info && check_info.nil?
                 selected_squares = capture(selected_squares, destination)
-                selected_squares = {} if check?(selected_squares, destination)
+                selected_squares = {} if check_opponent?(selected_squares, destination) || check_self?(selected_squares, destination)
                 register_capture(selected_squares, destination)
                 selected_squares.length == 1 ? break : next
 
             elsif  capture_info.nil? && check_info  
                 selected_squares = valid_destination(selected_squares,destination)
-                selected_squares = {} if check?(selected_squares, destination) == false
-                #check_for_checkmate
-                register_move(selected_squares.length,destination,selected_squares)
+                selected_squares = {} unless check_opponent?(selected_squares,destination)==true && check_self?(selected_squares,destination)==false
+                register_move(destination,selected_squares)
                 selected_squares.length == 1 ? break : next
 
             elsif  capture_info && check_info
                 selected_squares = capture(selected_squares, destination)
-                selected_squares = {} if check?(selected_squares, destination) == false
-                #check_for_checkmate
+                selected_squares = {} unless check_opponent?(selected_squares,destination)==true && check_self?(selected_squares,destination)==false
                 register_capture(selected_squares, destination)
                 selected_squares.length == 1 ? break : next                                                                                                                                      
             end
         end
     end
 
+    def all_valid_moves
+        moves = []
+        opponent_king = king_coordinate[1]
+        self_king = king_coordinate[0]
+        squares = board.grid.filter do |coordinate, data|
+            board.grid[coordinate][:piece] != nil && board.grid[coordinate][:piece].color == @self_color
+        end
+        squares.each do |coordinate, data|
+            data[:piece].potential_squares(coordinate).each do |destination| 
+                moves << data[:piece].piece_id.to_s + coordinate + destination if (check_opponent?({coordinate=>data}, destination)==false &&\
+                 check_self?({coordinate=>data},destination) == false)
+                moves << data[:piece].piece_id.to_s + coordinate + destination + "+" if (check_opponent?({coordinate=>data}, destination)==true &&\
+                 check_self?({coordinate=>data},destination) == false)
+            end
+
+            data[:piece].potential_captures(coordinate).each do |destination|
+                moves << data[:piece].piece_id.to_s + coordinate + 'x' + destination if (check_opponent?({coordinate=>data}, destination)==false &&\
+                 check_self?({coordinate=>data},destination) == false)
+                moves << data[:piece].piece_id.to_s + coordinate + 'x' + destination + "+" if (check_opponent?({coordinate=>data}, destination)==true &&\
+                 check_self?({coordinate=>data},destination) == false)                    
+            end
+        end 
+        moves
+    end
 end

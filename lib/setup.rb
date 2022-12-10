@@ -35,7 +35,7 @@ class Setup
 
     def init_rooks
         rooks = []
-        {'a3'=>:white,'h1'=>:white,'a6'=>:black,'h8'=>:black}.each_with_index do |(coordinate, color), index|
+        {'a8'=>:white,'h1'=>:white,'a6'=>:black,'h8'=>:black}.each_with_index do |(coordinate, color), index|
             rooks << Rook.new(color, :R, board)
             board.grid[coordinate][:piece] = rooks[index]
             board.grid[coordinate][:square][11] = rooks[index].rendered
@@ -71,7 +71,7 @@ class Setup
 
     def pawns_hash
         pawn_data = {} 
-        'a'.upto('h') do |file|
+        'a'.upto('e') do |file|
           pawn_data[[file,2].join] = :white  
           pawn_data[[file,7].join] = :black
         end

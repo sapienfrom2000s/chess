@@ -39,7 +39,6 @@ class Bishop < Abstract_Piece
     end
 
     def potential_squares(coordinate)
-        binding.pry
         current_file = coordinate[0]
         current_rank = coordinate[1].to_i
         diagonals_available(current_file, current_rank).map do |relative_move|
@@ -72,7 +71,6 @@ class Bishop < Abstract_Piece
         do |relative_move|
         forge_coordinate(relative_move, destination_file, destination_rank)
         end
-        # binding.pry
         c = b.any?\
         {|coordinate|  (potential_squares.include?(coordinate) && (board.grid[coordinate][:piece].nil?) || coordinate == current_coordinate)}
     end

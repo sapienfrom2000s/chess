@@ -15,8 +15,8 @@ class Queen < Abstract_Piece
         @piece_id = piece_id
         @rendered = piece(color)
         @board = board
-        @bishop = Bishop.new(nil, nil, board)
-        @rook = Rook.new(nil, nil, board)
+        @bishop = Bishop.new(color, :B, board)
+        @rook = Rook.new(color, :R, board)
     end
 
     def piece(color)
@@ -40,7 +40,7 @@ class Queen < Abstract_Piece
         captures = []
         captures << bishop.potential_captures(coordinate)
         captures << rook.potential_captures(coordinate)
-        captures
+        captures.flatten(1)
       end
 
     def capture_possible?(current_coordinate, destination)
