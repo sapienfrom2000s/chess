@@ -17,7 +17,7 @@ class Setup
 
     def init_knights
         knights = []
-        {'b6'=>:white,'g4'=>:white,'d5'=>:black,'b8'=>:black}.each_with_index do |(coordinate, color), index|
+        {'b1'=>:white,'g1'=>:white,'b8'=>:black,'g8'=>:black}.each_with_index do |(coordinate, color), index|
             knights << Knight.new(color,:N, board)
             board.grid[coordinate][:piece] = knights[index]
             board.grid[coordinate][:square][11] = knights[index].rendered
@@ -26,7 +26,7 @@ class Setup
 
     def init_bishops
         bishops = []
-        {'f4'=>:white,'c4'=>:white,'b5'=>:white,'h6'=>:black,'f8'=>:black}.each_with_index do |(coordinate, color), index|
+        {'c1'=>:white,'f1'=>:white,'c8'=>:black,'f8'=>:black}.each_with_index do |(coordinate, color), index|
             bishops << Bishop.new(color, :B, board)
             board.grid[coordinate][:piece] = bishops[index]
             board.grid[coordinate][:square][11] = bishops[index].rendered
@@ -35,7 +35,7 @@ class Setup
 
     def init_rooks
         rooks = []
-        {'a8'=>:white,'h1'=>:white,'a6'=>:black,'h8'=>:black}.each_with_index do |(coordinate, color), index|
+        {'a1'=>:white,'h1'=>:white,'a8'=>:black,'h8'=>:black}.each_with_index do |(coordinate, color), index|
             rooks << Rook.new(color, :R, board)
             board.grid[coordinate][:piece] = rooks[index]
             board.grid[coordinate][:square][11] = rooks[index].rendered
@@ -44,7 +44,7 @@ class Setup
 
     def init_queens
         queens = []
-        {'d1'=>:white,'d6'=>:black}.each_with_index do |(coordinate, color), index|
+        {'d1'=>:white,'d8'=>:black}.each_with_index do |(coordinate, color), index|
             queens << Queen.new(color, :Q, board)
             board.grid[coordinate][:piece] = queens[index]
             board.grid[coordinate][:square][11] = queens[index].rendered
@@ -71,7 +71,7 @@ class Setup
 
     def pawns_hash
         pawn_data = {} 
-        'a'.upto('e') do |file|
+        'a'.upto('h') do |file|
           pawn_data[[file,2].join] = :white  
           pawn_data[[file,7].join] = :black
         end
